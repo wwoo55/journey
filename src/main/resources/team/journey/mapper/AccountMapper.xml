@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.journey.mapper.AccountMapper">
+    <resultMap id="BaseResultMap" type="team.journey.pojo.Account">
+        <id column="aid" jdbcType="INTEGER" property="aid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        aid
+        , name, password, sex, birthday, email
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from account
+        where aid = #{aid,jdbcType=INTEGER}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from account
+        where aid = #{aid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="team.journey.pojo.Account">
+        insert into account (aid, name, password,
+                             sex, birthday, email)
+        values (#{aid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{email,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="team.journey.pojo.Account">
+        insert into account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aid != null">
+                aid,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aid != null">
+                #{aid,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=DATE},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.journey.pojo.Account">
+        update account
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=DATE},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where aid = #{aid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.journey.pojo.Account">
+        update account
+        set name     = #{name,jdbcType=VARCHAR},
+            password = #{password,jdbcType=VARCHAR},
+            sex      = #{sex,jdbcType=VARCHAR},
+            birthday = #{birthday,jdbcType=DATE},
+            email    = #{email,jdbcType=VARCHAR}
+        where aid = #{aid,jdbcType=INTEGER}
+    </update>
+
+    <!-- customize -->
+    <select id="selectByLogin" parameterType="account" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from account
+        where name = #{name} and password = #{password}
+    </select>
+    <select id="selectByName" parameterType="account" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from account
+        where name = #{name}
+    </select>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.journey.mapper.FavoriteMapper">
+  <resultMap id="BaseResultMap" type="team.journey.pojo.Favorite">
+    <id column="aid" jdbcType="INTEGER" property="aid" />
+    <id column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="date" jdbcType="DATE" property="date" />
+  </resultMap>
+  <resultMap id="MyResultMap" type="team.journey.pojo.Favorite">
+    <id column="aid" jdbcType="INTEGER" property="aid" />
+    <id column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="date"  property="date" />
+    <result column="title" property="title"/>
+    <result column="name" property="name"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    aid, rid, date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="team.journey.pojo.FavoriteKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from favorite
+    where aid = #{aid,jdbcType=INTEGER}
+      and rid = #{rid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="team.journey.pojo.FavoriteKey">
+    delete from favorite
+    where aid = #{aid,jdbcType=INTEGER}
+      and rid = #{rid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="team.journey.pojo.Favorite">
+    insert into favorite (aid, rid, date)
+    values (#{aid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, #{date,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="team.journey.pojo.Favorite">
+    insert into favorite
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        aid,
+      </if>
+      <if test="rid != null">
+        rid,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null">
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="team.journey.pojo.Favorite">
+    update favorite
+    <set>
+      <if test="date != null">
+        date = #{date,jdbcType=DATE},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+      and rid = #{rid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="team.journey.pojo.Favorite">
+    update favorite
+    set date = #{date,jdbcType=DATE}
+    where aid = #{aid,jdbcType=INTEGER}
+      and rid = #{rid,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectCount" parameterType="int" resultType="int">
+    select count(*)
+    from favorite
+    where aid = #{aid};
+  </select>
+  <select id="selectData" resultMap="MyResultMap">
+    select f.*,r.title,c.name
+    from favorite f
+           INNER JOIN route r on f.rid = r.rid
+           INNER JOIN category c on r.cid = c.cid
+           INNER JOIN seller s on r.sid = s.sid
+    where f.aid = #{param3}
+      limit #{param1},#{param2};
+  </select>
+
+</mapper>

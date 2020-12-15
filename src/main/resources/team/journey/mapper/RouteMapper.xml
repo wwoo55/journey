@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.journey.mapper.RouteMapper">
+    <resultMap id="BaseResultMap" type="team.journey.pojo.Route">
+        <id column="rid" jdbcType="INTEGER" property="rid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="price" jdbcType="REAL" property="price"/>
+        <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+        <result column="cid" jdbcType="INTEGER" property="cid"/>
+        <result column="sid" jdbcType="INTEGER" property="sid"/>
+    </resultMap>
+    <resultMap id="MyResultMap" type="team.journey.pojo.Route">
+        <id column="rid" jdbcType="INTEGER" property="rid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="price" jdbcType="REAL" property="price"/>
+        <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+        <result column="cid" jdbcType="INTEGER" property="cid"/>
+        <result column="sid" jdbcType="INTEGER" property="sid"/>
+        <association property="category" column="cid" javaType="category"
+                     select="team.journey.mapper.CategoryMapper.selectByPrimaryKey">
+        </association>
+        <association property="seller" column="sid" javaType="seller"
+                     select="team.journey.mapper.SellerMapper.selectByPrimaryKey">
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        rid
+        , title, price, introduce, img, cid, sid
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from route
+        where rid = #{rid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from route
+        where rid = #{rid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="team.journey.pojo.Route">
+        insert into route (rid, title, price,
+                           introduce, img, cid,
+                           sid)
+        values (#{rid,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=REAL},
+                #{introduce,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER},
+                #{sid,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="team.journey.pojo.Route">
+        insert into route
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rid != null">
+                rid,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="introduce != null">
+                introduce,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+            <if test="cid != null">
+                cid,
+            </if>
+            <if test="sid != null">
+                sid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rid != null">
+                #{rid,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=REAL},
+            </if>
+            <if test="introduce != null">
+                #{introduce,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                #{cid,jdbcType=INTEGER},
+            </if>
+            <if test="sid != null">
+                #{sid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.journey.pojo.Route">
+        update route
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=REAL},
+            </if>
+            <if test="introduce != null">
+                introduce = #{introduce,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                cid = #{cid,jdbcType=INTEGER},
+            </if>
+            <if test="sid != null">
+                sid = #{sid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where rid = #{rid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.journey.pojo.Route">
+        update route
+        set title     = #{title,jdbcType=VARCHAR},
+            price     = #{price,jdbcType=REAL},
+            introduce = #{introduce,jdbcType=VARCHAR},
+            img       = #{img,jdbcType=VARCHAR},
+            cid       = #{cid,jdbcType=INTEGER},
+            sid       = #{sid,jdbcType=INTEGER}
+        where rid = #{rid,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectCountByVo" parameterType="routeQueryVo" resultType="int">
+        select count(*)
+        from route
+        <where>
+            <if test="title!=null">
+                title like CONCAT('%',#{title},'%')
+            </if>
+            <if test="cid!=null">
+                and cid = #{cid}
+            </if>
+        </where>
+    </select>
+    <select id="selectByVo" parameterType="routeQueryVo" resultMap="MyResultMap">
+        select
+        r.*,s.name,s.source,c.name
+        from route r
+        Inner join category c on r.cid = c.cid
+        Inner Join seller s on r.sid = s.sid
+        <where>
+            <if test="title!=null">
+                title like CONCAT('%',#{title},'%')
+            </if>
+            <if test="cid!=null">
+                and r.cid = #{cid}
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+    <!--<select id="selectByTitle" parameterType="string" resultType="team.journey.pojo.Route">
+        select
+        <include refid="Base_Column_List"/>
+        from route
+        where title = #{title}
+    </select>-->
+
+
+</mapper>

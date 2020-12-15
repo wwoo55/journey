@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <style>
+        img {
+            width: 700px;
+            height: 400px;
+        }
+
+        #test {
+            position: absolute;
+            top: 30%;
+            left: 20%;
+        }
+
+        .search-button {
+            float: left;
+            width: 90px;
+            height: 40px;
+            background: #FF5722;
+            text-align: center;
+            line-height: 40px;
+            color: #000;
+            font-size: 18px;
+        }
+
+        .search {
+            position: absolute;
+            top: 20%;
+            left: 28%;
+        }
+
+        .search_input {
+            float: left;
+            width: 400px;
+            height: 36px;
+            border: 2px solid #FF5722;
+            padding-left: 10px;
+        }
+
+        .search_input:focus {
+            outline: none;
+        }
+
+        #welcome_img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <img id="welcome_img" src="img/welcome.jpg"/>
+</div>
+<div class="search">
+    <input id="search_input" name="" type="text" placeholder="你想到哪里耍?" class="search_input" autocomplete="off">
+    <a href="javascript:void(0);" class="search-button" onclick="javascript:toSearch()">搜索</a>
+</div>
+<div class="layui-carousel" id="test">
+    <div carousel-item="">
+        <div><img src="img/title/1.jpg"></div>
+        <div><img src="img/title/2.jpg"></div>
+        <div><img src="img/title/3.jpg"></div>
+        <div><img src="img/title/4.jpg"></div>
+        <div><img src="img/title/5.jpg"></div>
+        <div><img src="img/title/6.jpg"></div>
+        <div><img src="img/title/7.jpg"></div>
+    </div>
+</div>
+
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    !function () {
+        //无需再执行layui.use()方法加载模块，直接使用即可
+        var form = layui.form
+            , layer = layui.layer;
+        //…
+    }();
+</script>
+<script>
+    layui.use(['carousel', 'form'], function () {
+        var carousel = layui.carousel
+            , form = layui.form;
+        //图片轮播
+        carousel.render({
+            elem: '#test'
+            , width: '700px'
+            , height: '400px'
+            , interval: 2000
+        });
+        var $ = layui.$, active = {
+            set: function (othis) {
+                var THIS = 'layui-bg-normal'
+                    , key = othis.data('key')
+                    , options = {};
+
+                othis.css('background-color', '#5FB878').siblings().removeAttr('style');
+                options[key] = othis.data('value');
+                ins3.reload(options);
+            }
+        };
+        //监听开关
+        form.on('switch(autoplay)', function () {
+            ins3.reload({
+                autoplay: this.checked
+            });
+        });
+
+        $('.demoSet').on('keyup', function () {
+            var value = this.value
+                , options = {};
+            if (!/^\d+$/.test(value)) return;
+
+            options[this.name] = value;
+            ins3.reload(options);
+        });
+
+        //其它示例
+        $('.demoTest .layui-btn').on('click', function () {
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
+        });
+    });
+</script>
+<script>
+    $(function (){
+
+    })
+    function toSearch(){
+        let val = $("#search_input").val();
+        location.href = "route_list.html?title="+val;
+    }
+</script>
+
+</body>
+</html>

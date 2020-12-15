@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <style>
+        #login_div {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+        }
+    </style>
+</head>
+<body>
+<div id="login_div">
+    <form class="layui-form" id="login_form" action="#">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账户</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入账号" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男" checked>
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-inline">
+                <input type="text" id="birthday" name="birthday" required lay-verify="required" placeholder="请输入你的出生日期"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" required lay-verify="required" placeholder="请输入邮箱" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    !function () {
+        //无需再执行layui.use()方法加载模块，直接使用即可
+        var form = layui.form
+            , layer = layui.layer;
+        //…
+    }();
+</script>
+<script>
+    //执行一个laydate实例
+    layui.laydate.render({
+        elem: '#birthday' //指定元素
+    });
+</script>
+<script>
+    $(function () {
+        $("#login_form").submit(function () {
+            $.post("register.do", $(this).serialize(), function (data) {
+                if (data.flag) {
+                    // login success
+                    layer.open({
+                        title: 'register'
+                        , content: data.msg
+                        , closeBtn: 0
+                        , yes: function () {
+                            location.href = "login.html";
+                        }
+                    });
+                } else {
+                    // login error
+                    layer.open({
+                        title: 'register'
+                        , content: data.msg
+                        , closeBtn: 0
+                        , yes: function () {
+                            location.href = "register.html";
+                        }
+                    });
+                }
+            }, "json");
+            // 防止表单的2次提交
+            return false;
+        });
+    })
+</script>
+</body>
+</html>

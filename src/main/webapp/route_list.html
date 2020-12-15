@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>旅游-搜索</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/getParameter.js"></script>
+    <script src="layui/layui.all.js"></script>
+    <script>
+        !function () {
+            //无需再执行layui.use()方法加载模块，直接使用即可
+            var form = layui.form
+                , layer = layui.layer;
+            //…
+        }();
+    </script>
+</head>
+<body>
+
+<div class="page_one">
+    <div class="contant">
+        <div class="crumbs">
+            <p><i class="layui-icon layui-icon-search" style="font-size: 20px;"></i><span>搜索结果</span></p>
+        </div>
+        <div class="xinxi clearfix">
+            <div class="left">
+                <div class="header">
+                    <span>线路信息</span>
+                    <span class="jg">价格</span>
+                </div>
+                <ul id="route_list">
+                    <li>
+                        <div class="img"><img src="images/04-search_03.jpg" alt=""></div>
+                        <div class="text1">
+                            <p>title</p>
+                            <p>introduce</p>
+                            <p>c.name</p>
+                            <p>s.name s.source</p>
+                        </div>
+                        <div class="price">
+                            <p class="price_num">
+                                <span>&yen;</span>
+                                <span>999</span>
+                                <span>起</span>
+                            </p>
+                            <p><a href="#" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-star"
+                                                                               style="font-size: 20px;"></i>收藏</a>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="page_num_inf" id="page_number">
+                    <i></i> 共
+                    <span>12</span>页<span>132</span>条
+                </div>
+                <div class="pageNum">
+                    <ul id="paging">
+                        <li><a href="">首页</a></li>
+                        <li class="threeword"><a href="#">上一页</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">6</a></li>
+                        <li><a href="#">7</a></li>
+                        <li><a href="#">8</a></li>
+                        <li><a href="#">9</a></li>
+                        <li><a href="#">10</a></li>
+                        <li class="threeword"><a href="javascript:;">下一页</a></li>
+                        <li class="threeword"><a href="javascript:;">末页</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        /*layer.msg(location.href);*/
+        /*layer.msg(parent.location.href);*/
+        let title = getParameter("title");
+        title = decodeURIComponent(title);
+        let cid = getParameter("cid");
+        let currentPage = getParameter("currentPage");
+        let pageSize = getParameter("pageSize");
+        transferPage(title, cid, currentPage, pageSize);
+
+    });
+
+    function transferPage(title, cid, currentPage, pageSize) {
+        /*layer.alert(" title:" + title + " cid:" + cid + " currentPage:" + currentPage + " pageSize:" + pageSize);*/
+        $.get("/route/findList.do", {
+            "title": title,
+            "cid": cid,
+            "currentPage": currentPage,
+            "PageSize": pageSize
+        }, function (e) {
+
+            // dataList
+            let temp = '';
+            let list = e.dataList;
+            for (let i = 0; i < list.length; i++) {
+                temp += '<li>\n' +
+                    '                        <div class="img"><img style="width: 299px;height: 169px" src="' + list[i].img + '" alt=""></div>\n' +
+                    '                        <div class="text1">\n' +
+                    '                            <p>' + list[i].title + '</p>\n' +
+                    '<br/>' +
+                    '                            <p>' + list[i].introduce + '</p>\n' +
+                    '<br/>' +
+                    '                            <p>' + list[i].category.name + '--->' + list[i].seller.name + '</p>\n' +
+                    '                        </div>\n' +
+                    '                        <div class="price">\n' +
+                    '                            <p class="price_num">\n' +
+                    '                                <span>&yen;</span>\n' +
+                    '                                <span>' + list[i].price + '</span>\n' +
+                    '                                <span>起</span>\n' +
+                    '                            </p>\n' +
+                    '                            <p><a href="javascript:addFavorite('+list[i].rid+')" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-star"\n' +
+                    '                                                                               style="font-size: 20px;"></i>收藏</a>\n' +
+                    '                            </p>\n' +
+                    '                        </div>\n' +
+                    '                    </li>';
+            }
+            $("#route_list").html(temp);
+
+            // totalCount totalPage
+            let ttemp = '';
+            ttemp += '                    <i></i> 共\n' +
+                '                    <span>' + e.totalPage + '</span>页<span>' + e.totalCount + '</span>条\n';
+            $("#page_number").html(ttemp);
+
+            // 分页
+            let paging = '';
+            paging += '<li onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + null + ',' + pageSize + ')"><a href="javascript:void(0);">首页</a></li>';
+            let beforePage = currentPage - 1;
+            if (beforePage <= 0) {
+                beforePage = 1;
+            }
+            paging += '<li class="threeword" onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + beforePage + ',' + pageSize + ');"><a href="javascript:void(0);">上一页</a></li>';
+
+            // 前5后4 一共展示10页
+            // 通常情况
+            let start = e.currentPage - 5;
+            let end = e.currentPage + 4;
+            // 特殊情况
+            if (start < 1) {
+                // 前面不足5个
+                start = 1;
+                if (e.totalPage > 10) {
+                    end = 10;
+                } else {
+                    // 后面不足4个
+                    end = e.totalPage;
+                }
+            } else if (e.totalPage < end) {
+                // 后面不足4个
+                end = e.totalPage;
+                start = end - 9;
+                if (start < 1) {
+                    // 前面不足5个
+                    start = 1;
+                }
+            }
+
+            for (let i = start; i <= end; i++) {
+                if (i == e.currentPage) {
+                    paging += '<li onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + i + ',' + pageSize + ');" class="curPage"><a href="javascript:void(0);">' + i + '</a></li>';
+                } else {
+                    paging += '<li onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + i + ',' + pageSize + ');"><a href="javascript:void(0);">' + i + '</a></li>';
+                }
+            }
+
+
+            let nextPage = e.currentPage + 1;
+            if (nextPage > e.totalPage) {
+                nextPage = e.totalPage;
+            }
+            paging += '<li class="threeword" onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + nextPage + ',' + pageSize + ');"><a href="javascript:void(0);">下一页</a></li>';
+            paging += '<li class="threeword" onclick="javascript:transferPage(\'' + title + '\',' + cid + ',' + e.totalPage + ',' + pageSize + ');"><a href="javascript:void(0);">末页</a></li>';
+
+            $("#paging").html(paging);
+
+            window.scrollTo(0, 0);
+        }, "json");
+    }
+
+</script>
+<script>
+    function addFavorite(rid){
+        $.post("/checkLoginStatus.do",function (e){
+            if (e.flag){
+                $.get("/favorite/add.do",{"rid":rid},function (data){
+                    if (data.flag){
+                        layer.msg('<i class="layui-icon layui-icon-face-smile"></i>收藏成功');
+                    }else {
+                        layer.msg('<i class="layui-icon layui-icon-face-surprised"></i>你怎么可以忘记你已经收藏了我呢！');
+                    }
+                },"json");
+            }else {
+                layer.open({
+                    title: 'error'
+                    ,content: '还未登录，请登陆后再收藏'
+                    ,closeBtn: 0
+                    ,yes:function (){
+                        location.href = "login.html";
+                    }
+                });
+            }
+        },"json");
+    }
+
+</script>
+</body>
+</html>

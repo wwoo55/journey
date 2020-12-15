@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        #myiframe {
+            height: 600px;
+        }
+
+    </style>
+</head>
+<body class="layui-layout-body">
+
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">到处耍旅游网</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="index.html">首页</a></li>
+            <li class="layui-nav-item"><a  onclick="checkTransfer()" target="myiframe" id="toFavorite">我的收藏</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;" id="account_name">
+                    未登录
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="login.html" target="myiframe" id="login_a">登录</a></dd>
+                    <dd><a href="register.html" target="myiframe">注册</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/logout.do" ><i style="font-size: 20px;" class="layui-icon layui-icon-logout"></i>退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="/route_list.html?cid=1" target="myiframe">境内跟团</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=2" target="myiframe">境内自助</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=3" target="myiframe">周边/自驾</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=4" target="myiframe">出境短线</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=5" target="myiframe">出境长线</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=6" target="myiframe">出境自助</a></li>
+                <li class="layui-nav-item"><a href="/route_list.html?cid=7" target="myiframe">海岛</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <iframe id="myiframe" name="myiframe" src="search.html" class="layui-col-md12"></iframe>
+        <!--<div style="padding: 15px;">内容主体区域</div>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 到处耍旅游网
+    </div>
+</div>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="layui/layui.all.js"></script>
+<script>
+    !function () {
+        //无需再执行layui.use()方法加载模块，直接使用即可
+        var form = layui.form
+            , layer = layui.layer;
+        //…
+    }();
+</script>
+<script>
+    $(function (){
+        $.post("/checkLoginStatus.do",function (e){
+            if (e.flag){
+                $("#account_name").html(e.data.name)
+                $("#login_a").addClass("layui-btn-disabled").prop("href","javascript:void(0)");
+                $("#toFavorite").prop("href","favorite_list.html");
+
+                /*$("#login_a").prop("href","javascript:void(0)");*/
+            }else {
+                $("#login_a").removeClass("layui-btn-disabled").prop("href","login.html");
+                $("#toFavorite").prop("href","javascript:void(0)");
+                /*$("#toFavorite").prop("href","javascript:checkTransfer()");*/
+                /*$("#login_a").prop("href","login.html");*/
+            }
+        },"json");
+
+    });
+</script>
+<script type="text/javascript">
+    function checkTransfer(){
+        $.post("/checkLoginStatus.do",function (e){
+            if (e.flag){
+                $("#myiframe").prop("src","favorite_list.html");
+            }else {
+                layer.msg('还没有登录哟!将自动跳转到登录页面哦', {
+                    icon: 5,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+                    //do something
+                    $("#myiframe").prop("src","login.html");
+                });
+                /*layer.open({
+                    title: 'error'
+                    ,content: '还未登录，请登陆后使用'
+                    ,closeBtn: 0
+                    ,yes:function (){
+                        $("#myiframe").prop("src","login.html");
+                    }
+                });*/
+            }
+        },"json");
+    }
+</script>
+</body>
+</html>
