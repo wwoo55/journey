@@ -73,7 +73,7 @@
 </script>
 <script>
     $(function (){
-        $.post("/checkLoginStatus.do",function (e){
+        $.post("checkLoginStatus.do",function (e){
             if (e.flag){
                 $("#account_name").html(e.data.name)
                 $("#login_a").addClass("layui-btn-disabled").prop("href","javascript:void(0)");
@@ -92,7 +92,7 @@
 </script>
 <script type="text/javascript">
     function checkTransfer(){
-        $.post("/checkLoginStatus.do",function (e){
+        $.post("checkLoginStatus.do",function (e){
             if (e.flag){
                 $("#myiframe").prop("src","favorite_list.html");
             }else {
