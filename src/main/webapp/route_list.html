@@ -96,7 +96,7 @@
 
     function transferPage(title, cid, currentPage, pageSize) {
         /*layer.alert(" title:" + title + " cid:" + cid + " currentPage:" + currentPage + " pageSize:" + pageSize);*/
-        $.get("/route/findList.do", {
+        $.get("route/findList.do", {
             "title": title,
             "cid": cid,
             "currentPage": currentPage,
@@ -194,9 +194,9 @@
 </script>
 <script>
     function addFavorite(rid){
-        $.post("/checkLoginStatus.do",function (e){
+        $.post("checkLoginStatus.do",function (e){
             if (e.flag){
-                $.get("/favorite/add.do",{"rid":rid},function (data){
+                $.get("favorite/add.do",{"rid":rid},function (data){
                     if (data.flag){
                         layer.msg('<i class="layui-icon layui-icon-face-smile"></i>收藏成功');
                     }else {

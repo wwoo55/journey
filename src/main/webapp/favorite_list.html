@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
         });*/
         table.render({
             elem: '#demo'
-            ,url:'/favorite/find.do'
+            ,url:'favorite/find.do'
             /*,toolbar: '#toolbarDemo'*/
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,page: true //开启分页
@@ -83,7 +83,7 @@
                 layer.confirm('<i class="layui-icon layui-icon-face-cry" style="font-size: 30px;"></i>真的要删除收藏么', function(index){
                     obj.del();
                     layer.close(index);
-                    $.post("/favorite/delete.do",{"aid":data.aid,"rid":data.rid},function (e){
+                    $.post("favorite/delete.do",{"aid":data.aid,"rid":data.rid},function (e){
                         if (e.flag){
                             // 删除成功
                             layer.msg('<i class="layui-icon layui-icon-tips" style="font-size: 20px;"></i>取消收藏成功');
