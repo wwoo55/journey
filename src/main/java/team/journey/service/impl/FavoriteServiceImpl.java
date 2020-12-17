@@ -47,7 +47,7 @@ public class FavoriteServiceImpl implements FavoriteService {
             page = 1;
         }
         if (limit==null){
-            limit = 10;
+            limit = 5;
         }
         PageForFront<Favorite> forFront = new PageForFront<>();
         forFront.setCode(0);
