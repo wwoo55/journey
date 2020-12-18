@@ -38,7 +38,6 @@ public class FavoriteController {
             info.setFlag(false);
         }
         return info;
-
     }
 
     @RequestMapping("/find.do")
@@ -48,7 +47,6 @@ public class FavoriteController {
         Account login = (Account) session.getAttribute("LOGIN");
         Integer aid = login.getAid();
         PageForFront<Favorite> forFront = service.find(page,limit,aid);
-
         /*String test = null;
         try {
             test = "{\n" +
@@ -421,7 +419,6 @@ public class FavoriteController {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-
         return forFront;
 
     }
