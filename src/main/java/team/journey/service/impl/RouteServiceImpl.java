@@ -23,7 +23,7 @@ public class RouteServiceImpl implements RouteService {
     private RouteMapper mapper;
 
     @Override
-    public Page<Route> findList(RouteQueryVo rqv) {
+    public Page<Route>  findList(RouteQueryVo rqv) {
         // 数据处理
         if ("".equals(rqv.getTitle())||"null".equals(rqv.getTitle())) {
             rqv.setTitle(null);
